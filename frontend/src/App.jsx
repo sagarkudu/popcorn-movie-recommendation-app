@@ -16,6 +16,7 @@ function App() {
   const [answers, setAnswers] = useState(initialAnswers);
 
   const [movie, setMovie] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   function handleAnswerChange(id, value) {
     setAnswers((currentAnswers) => ({
@@ -26,15 +27,20 @@ function App() {
 
   async function handleSubmit(event) {
     event.preventDefault();
+    setLoading(true);
+    setMovie(null);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommend`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/recommend`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(answers),
         },
-        body: JSON.stringify(answers),
-      });
+      );
 
       const data = await response.json();
 
@@ -45,6 +51,8 @@ function App() {
       setMovie(data.movie);
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -56,7 +64,18 @@ function App() {
     <>
       <main className="page">
         <section className="app-shell" aria-label="PopChoice movie preferences">
-          {!movie ? (
+          {loading ? (
+            <div className="recommendation-loader">
+              <div className="loader-popcorn">🍿</div>
+
+              <h2>Finding your perfect movie...</h2>
+
+              <p>
+                We're checking your preferences and searching through our movie
+                collection.
+              </p>
+            </div>
+          ) : !movie ? (
             <>
               <Brand />
 

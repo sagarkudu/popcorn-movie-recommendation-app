@@ -4,15 +4,10 @@ import { openai } from "../config/openai.js";
 
 export async function recommendMovie({ favorite, era, mood }) {
   const query = `
-Favorite movie:
-${favorite}
-
-Movie preference:
-${era}
-
-Mood:
-${mood}
-`;
+      Favorite movie: ${favorite}
+      Movie preference: ${era}
+      Mood: ${mood}
+  `;
 
   console.log("\nUser query:");
   console.log(query);
